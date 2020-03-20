@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+</head>
+<body>
+    <br><br>
+    <div id="app" class="container" style="max-width:90%">
+        <!-- <div style="width:600px;height:600px">
+            <canvas id="profile" width="1" height="1" style="height:300px;width:400px"></canvas>
+        </div> -->
+        <label for="">Podaj numery zleceń</label>
+        <input type="text" v-model="zlecenia">
+        <button @click="getData">Pobierz dane</button>
+        <br><br>
+        <table class="table table-bordered table-dark" style="width:50%">
+            <thead>
+                <tr>
+                    <td>Zlecenie</td>
+                    <td>Pozycja</td>
+                    <td>ilość</td>
+                    <td>jednosteknasztuke</td>
+                    <td>zrobionesztuki</td>
+                    <td>zrobione jednostki</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="elem in dane">
+                    <td @click="filter(elem.commande)">{{elem.commande}}</td>
+                    <td>{{elem.numero}}</td>
+                    <td>{{elem.qte}}</td>
+                    <td>{{elem.jednosteknasztuke}}</td>
+                    <td>{{elem.zrobionesztuki}}</td>
+                    <td>{{elem.jednosteknasztuke * elem.zrobionesztuki}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+    <script>
+        let app = new Vue({
+            el: '#app',
+            data: {
+                dane:[],
+                zlecenia: '\'TEST_1.5S\',\'TEST_1S\',\'TEST_2S\',\'TEST_WIELEPOZYCJ\'',
+            },
+            methods: {
+                getData() {
+                    let self = this;
+                    fetch('api/sumysql.php').then((res) => res.json()).then((res) => self.dane = res) ;
+
+                },
+                filter(value) {
+                    this.data = this.data.filter((el) => el.commande == value)
+                }
+            },
+            mounted() {
+                let self = this;
+                this.getData();
+            }
+        })
+
+    </script>
+</body>
+</html>

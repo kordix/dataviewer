@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="informacja"></div>
+
+    <script>
+        const arr = [
+
+            { imie: 'zbyszek', ilosc: 30 },
+
+            { imie: 'zbyszek', ilosc: 20 },
+
+            { imie: 'ania', ilosc: 20 },
+
+            { imie: 'ania', ilosc: 10 },
+
+        ]
+
+
+        const result = arr.reduce(function (res, val) {
+            if (!res[val.imie]) {
+                res[val.imie] = 0;
+            }
+            res[val.imie] += val.ilosc;
+            return res;
+        }, {})
+
+        console.log(result)
+
+        var groupBy = function (xs, key) {
+            return xs.reduce(function (rv, x) {
+                (rv[x[key]] = rv[x[key]] || []).push(x);
+                return rv;
+            }, {});
+        };
+
+        console.log(groupBy(['asdf', 'sdfg', 'qwerr'], 'length'));
+
+    </script>
+</body>
+
+</html>
