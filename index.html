@@ -41,6 +41,10 @@
             color:black;
             font-weight:bold;
         }
+        button.jednostki{
+            background: #922;
+            color:white;
+        }
 
 
         thead .szczegoly{
@@ -85,6 +89,11 @@
         .green{
             background:lightgreen !important
         }
+
+        .greendark{
+            background:darkgreen !important
+        }
+
         tbody td.statusy{
             padding:0px;
         }
@@ -97,16 +106,6 @@
         tbody td.statusy:hover > p{
             opacity:1
         }
-
-
-
-
-    
-
-
-   
-    
-
     </style>
 
 </head>
@@ -128,6 +127,8 @@
             <div style="margin-left:auto">
                 <button @click="showStatusy = !showStatusy" class="btn statusy">Pokaż statusy</button>
                 <button @click="showSczegoly = !showSczegoly" class="btn szczegoly">Pokaż szczegóły</button>
+                <button @click="showWykonanie = !showWykonanie" class="btn jednostki">Pokaż wykonanie</button>
+
             </div>
         </div>
 
@@ -137,15 +138,22 @@
                     <td class="podstawowe">Nr zlec.</td>
                     <td class="podstawowe" style="text-align:center!important"> Nr poz.</td>
                     <td class="podstawowe"> Nr szt.</td>
-                    <td v-if="showSczegoly" class="szczegoly"> System</td>
+                    <td v-if="showSczegoly" class="szczegoly">System</td>
                     <td v-if="showSczegoly" class="szczegoly">Szerokość</td>
                     <td v-if="showSczegoly" class="szczegoly">Wysokość</td>
-                    <td v-if="showStatusy" class="statusy" style="width:60px" alt="PIŁA">PIŁ</td>
+                    <td v-if="showSczegoly" class="szczegoly">Łuki</td>
+                    <td v-if="showSczegoly" class="szczegoly">Szprosy</td>
+                    <td v-if="showSczegoly" class="szczegoly">Rolety</td>
+                    <td v-if="showSczegoly" class="szczegoly">Poszerzenia</td>
+                    <td v-if="showStatusy" class="statusy" style="width:60px">PIŁ</td>
                     <td v-if="showStatusy" class="statusy" style="width:60px">OKU</td>
                     <td v-if="showStatusy" class="statusy" style="width:60px">SŁU</td>
                     <td v-if="showStatusy" class="statusy" style="width:60px">KON</td>
                     <td v-if="showStatusy" class="statusy" style="width:60px">SZKL</td>
-                    <td class="jednostki">Jednostki</td>
+                    <td class="jednostki">JEDNOSTKI</td>
+                    <td class="jednostki" v-if="showWykonanie">WYKONANO</td>
+                    <td class="jednostki" v-if="showWykonanie">DO ZROBIENIA</td>
+
 
             </thead>
             <tbody>
@@ -156,12 +164,26 @@
                     <td v-if="showSczegoly" class="szczegoly" >{{elem.dormant}}</td>
                     <td v-if="showSczegoly" class="szczegoly">{{elem.dim1}}</td>
                     <td v-if="showSczegoly" class="szczegoly">{{elem.dim2}}</td>
+                    <td v-if="showSczegoly" class="szczegoly"></td>
+                    <td v-if="showSczegoly" class="szczegoly"></td>
+                    <td v-if="showSczegoly" class="szczegoly"></td>
+                    <td v-if="showSczegoly" class="szczegoly"></td>
                     <td v-if="showStatusy" class="statusy" :class="{green:elem.PILA}"><p> PIŁA</p></td>
                     <td v-if="showStatusy" class="statusy" :class="{green:elem.OKUWANIE}"><p>OKU</p> </td>
                     <td v-if="showStatusy" class="statusy" :class="{green:elem.MontazSlupkow}"><p>SŁU</p></td>
                     <td v-if="showStatusy" class="statusy" :class="{green:elem.KONTROLA}"><p>KON</p></td>
-                    <td v-if="showStatusy" class="statusy" :class="{green:elem.SZKLENIE}"><p>SZK</p></td>
+                    <td v-if="showStatusy" class="statusy" :class="{greendark:elem.SZKLENIE}"><p>SZK</p></td>
                     <td class="jednostki">{{elem.jednostki}}</td>
+                    <td class="jednostki" v-if="showWykonanie">{{elem.wykonano}} </td>
+                    <td class="jednostki" v-if="showWykonanie">{{elem.dozrobienia}} </td>
+
+                </tr>
+                <tr>
+                    <td :colspan="colspan">Suma:</td>
+                    <td>{{sumaall}}</td>
+                    <td v-if="showWykonanie">{{sumaWykonano}}</td>
+                    <td v-if="showWykonanie">{{sumaDozrobienia}}</td>
+
 
                 </tr>
             </tbody>
@@ -209,22 +231,38 @@
             el: '#app',
             data: {
                 dane: [],
-                zlecenia: '\'ZAM-20-00004\'',
+                zlecenia: '\'ZAM-20-00004\',\'ZAM-20-AO-71000\' ',
                 profile: [],
                 travdorm: [],
                 sumy:{},
                 sumypropsarray:[],
                 sumaall:0,
                 showSczegoly:false,
-                showStatusy:true,
+                showStatusy:false,
+                showWykonanie:false,
                 showDetailed:true,
                 showSummed:false,
             },
             methods: {
                 getData() {
                     let self = this;
-                    fetch('api/statusy.php?zam=' + self.zlecenia).then((res) => res.json()).then((res) => this.travdorm = res).then((res)=>self.getSumy()) ;
+                    fetch('api/statusy.php?zam=' + self.zlecenia).then((res) => res.json()).then((res) => this.travdorm = res).then((res)=>self.getSumy()).then((res)=>self.dodajWynikoweDane()) ;
 
+                },
+                dodajWynikoweDane(){
+                    for(i=0;i<this.travdorm.length;i++){
+
+                        if(this.travdorm[i].SZKLENIE){
+                            this.travdorm[i].dozrobienia = 0
+                            this.travdorm[i].wykonano = this.travdorm[i].jednostki;
+                        }else{
+                            this.travdorm[i].dozrobienia = this.travdorm[i].jednostki
+                            this.travdorm[i].wykonano = 0;
+
+                        }
+
+
+                    }
                 },
                 filter(value) {
                     this.detlot = this.travdorm.filter((el) => el.commande == value)
@@ -250,6 +288,9 @@
                     },0)
 
                     this.sumaall = result;
+                },
+                zmienWykonano(){
+                    this.travdorm[0].wykonano = 50;
                 }
             },
             mounted() {
@@ -258,6 +299,38 @@
                 setInterval(function(){
                     location.reload();
                 },60000 * 5)
+            },
+            computed:{
+                colspan(){
+                    let number = 3;
+
+                    if(this.showStatusy){
+                        console.log('show szczegloy');
+                        number += 5;
+                    }
+
+                    
+                    if(this.showSczegoly){
+                        console.log('show szczegloy');
+                        number += 7;
+                    }
+
+                    return number
+                },
+                sumaWykonano(){
+                    return  this.travdorm.reduce(function(res,val){
+                        res += parseFloat(val['wykonano']);
+                        return res
+                    },0)
+
+                },
+                sumaDozrobienia(){
+                    return  this.travdorm.reduce(function(res,val){
+                        res += parseFloat(val['dozrobienia']);
+                        return res
+                    },0)
+
+                }
             }
         })
 
