@@ -1,0 +1,135 @@
+ /* doroty kod */
+ .table-fix-head{
+    overflow-y: auto;
+    height: 800px;
+}
+.table-fix-head table{
+    border-collapse: collapse;
+    /* width: 80%; */
+}
+.table-fix-head td{
+    padding: 4px 4px;
+}
+.table-fix-head thead td{
+    position: sticky;
+    top: -1px;
+    /* border-bottom:2px black solid; */
+}
+
+.table-fix-head footer td{
+    position: sticky;
+    bottom: 0px;
+    /* border-bottom:2px black solid; */
+}
+
+table tr td:first-child{
+    width:10em;
+}
+
+
+
+.collapsing{position:relative;height:0;overflow:hidden;transition:height 0.35s ease}
+
+
+.form-control{
+    width:auto;
+}
+
+
+p:hover{
+    text:'asdffdsa';
+    content:'afsdfad';
+}
+.table {
+    width:auto ;
+    text-align:center;
+}
+
+p {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+}
+
+thead .podstawowe {
+    background: #666;
+    text-align:center;
+}
+
+tbody .podstawowe {
+    background: #999999;
+}
+
+thead .jednostki {
+    background: #922;
+}
+
+tbody .jednostki {
+    background: white;
+    color:black;
+    font-weight:bold;
+}
+button.jednostki{
+    background: #922;
+    color:white;
+}
+
+
+thead .szczegoly{
+    background: #387
+}
+
+tbody .szczegoly {
+    background: #eee;
+    color:black;
+}
+
+button.szczegoly {
+    background-color: #387 !important;
+    color:white;
+}
+
+button.szczegoly:hover {
+    background-color: #164 !important;
+    color:white;
+}
+
+thead .statusy{
+    background: darkgoldenrod
+}
+
+tbody .statusy {
+    background: white;
+    color:black;
+}
+
+button.statusy {
+    background: darkgoldenrod;
+    color:white;
+}
+
+button.statusy:hover {
+    background: darkgoldenrod;
+    opacity:0.8;
+    color:white;
+}
+
+.green{
+    background:lightgreen !important
+}
+
+.greendark{
+    background:darkgreen !important
+}
+
+tbody td.statusy{
+    padding:0px;
+}
+
+.statusy p {
+    opacity:0;
+    cursor:default;
+}
+
+tbody td.statusy:hover > p{
+    opacity:1
+}
