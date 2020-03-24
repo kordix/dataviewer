@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Wyciąganie danych</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -17,10 +17,6 @@
 <body>
     <br><br>
     <div id="app" class="container" style="max-width:90%">
-
-
-
-
 
         <div id="accordion" class="mb-3" style="width:600px">
             <div class="card">
@@ -125,24 +121,22 @@
                     <td class="jednostki" v-if="showWykonanie">{{elem.dozrobienia}} </td>
 
                 </tr>
-                <tr class="footer">
+                <tfoot>
                     <td :colspan="colspan">Suma:</td>
                     <td>{{sumaall}}</td>
                     <td v-if="showWykonanie">{{sumaWykonano}}</td>
                     <td v-if="showWykonanie">{{sumaDozrobienia}}</td>
 
 
-                </tr>
+                </tfoot>
             </tbody>
         </table>
     </div>
 
-        Suma wszystkich: {{sumaall}}
-
         <br>
         <br>
 
-        <button @click="showSummed = !showSummed" class="mb-2">Pokaż posumowanie po pozycji</button>
+        <!-- <button @click="showSummed = !showSummed" class="mb-2">Pokaż posumowanie po pozycji</button> -->
         <br>
 
 
@@ -184,7 +178,6 @@
             data: {
                 dane: [],
                 numeryzlecen: [{ zlecenie: 'ZAM-20-00653' }],
-                zlecenia: '\'ZAM-20-00653\'',
                 profile: [],
                 travdorm: [],
                 sumy: {},

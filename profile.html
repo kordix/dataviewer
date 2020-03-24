@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="app">
+
+        <table class="table table-bordered table-dark">
+            <thead>
+                <td>Zlecenie</td>
+                <td>Pozycja</td>
+                <td>Profil</td>
+                <td>Opis profilu</td>
+                <td>Długość</td>
+            </thead>
+            <tbody>
+                <tr v-for="elem in dane">
+                    <td>{{elem.zlecenie}}</td>
+                    <td>{{elem.pozycja}}</td>
+                    <td>{{elem.profil}}</td>
+                    <td>{{elem.opis}}</td>
+                    <td>{{elem.dlugosc}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+    <script>
+        let app =new Vue({
+            el:"#app",
+            data:{
+                dane:[],
+                numeryzlecen: [{ zlecenie: 'ZAM-20-00653' }],
+                numeryzlecenstring: ''
+            },
+            methods:{
+                getData(){
+                    let self = this;
+                    this.getZleceniaString();
+                    fetch('/api/profile.php?zam='+self.numeryzlecenstring).then((res)=>res.json()).then((res)=>self.dane = res)
+                },
+                getZleceniaString() {
+                    let result = '';
+                    for (let i = 0; i < this.numeryzlecen.length; i++) {
+                        console.log(this.numeryzlecen[0]);
+
+                        result += '\'' + this.numeryzlecen[i].zlecenie + '\'' + ',';
+                    }
+
+                    this.numeryzlecenstring = result.slice(0, -1);
+
+                }
+            },
+            created(){
+                if (localStorage.zamowienia){
+                    this.numeryzlecen = JSON.parse(localStorage.zamowienia);
+                }
+            },
+            mounted(){
+                this.getData();
+            }
+
+        })
+    </script>
+
+</body>
+</html>

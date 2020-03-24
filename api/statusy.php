@@ -10,6 +10,10 @@ require_once 'db.php';
 //detail.caisson AS rolety,
 //travdorm.vitrage AS wypelnienieSkrzydla, 
 
+//travdorm.refcrx as szprosy
+
+//,(SELECT count(*) from detlot where detlot.commande = prepalot.commande and detlot.chassis=prepalot.id and detlot.cintre = 1) as 'Luki'
+
 $sth = $dbh->prepare("
 SELECT prepalot.commande,prepalot.id,prepalot.index, prepalot.codebarre , detail.dormant,detail.dim1,detail.dim2, detail.caisson AS Rolety,detail.vitrage AS wypełnienieRamy,
 IF((SELECT barcode FROM atelier WHERE atelier.commande = prepalot.commande AND atelier.chassis = prepalot.id and poste = 'P_KONTROLA' LIMIT 1 ) IS NOT NULL,'TAK','')  AS 'KONTROLA',
@@ -21,7 +25,7 @@ IF((SELECT barcode FROM atelier WHERE atelier.commande = prepalot.commande AND a
 (SELECT count(*) from rehdorm where rehdorm.commande = prepalot.commande and rehdorm.chassis=prepalot.id) as 'Poszerzenia'
 FROM prepalot
 join detail on prepalot.commande = detail.commande and prepalot.id = detail.numero and detail.dormanth <> ''
-WHERE prepalot.commande IN ($zamowienia) ORDER BY 1,2,3
+WHERE prepalot.commande IN ($zamowienia) AND prepalot.volet=0 ORDER BY 1,2,3
 ");
 $sth->execute();
 
