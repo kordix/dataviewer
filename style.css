@@ -2,6 +2,10 @@
   color:red;
   font-weight:bold;
  }
+
+ p.loading {
+     font-size:18px;
+ }
  
  
  /* doroty kod */
@@ -12,9 +16,17 @@
 }
 .table-fix-head table{
     border-collapse: collapse;
+    table-layout: fixed;
+
 }
+
+td{
+    white-space: 'no-wrap';
+}
+
 .table-fix-head td{
     padding: 4px 4px;
+    white-space: nowrap;
 }
 .table-fix-head thead td{
     position: sticky;

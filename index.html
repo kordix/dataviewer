@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wyciąganie danych</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -18,124 +18,143 @@
     <br><br>
     <div id="app" class="container" style="max-width:90%">
 
-        <div id="accordion" class="mb-3" style="width:600px">
-            <div class="card">
-                <div class="card-header" id="headingOne">
-                    <h5 class="mb-0">
-                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
-                            aria-expanded="true" aria-controls="collapseOne">
-                            Podaj numery zleceń
-                        </button>
-                    </h5>
-                </div>
+        <p v-for="message in messages" class="error">
+            {{message}}
+        </p>
 
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
-                    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
 
-                        <div id="zleceniamodul">
-                            <div v-for="(elem,index) in numeryzlecen" class="form-group">
-                                <input type="text" class="form-control" v-model="numeryzlecen[index].zlecenie" style="display:inline">
-                                <button class="btn btn-danger" @click="removeZlecenie(index)">-</button>
-                
+            <div id="accordion" class="mb-3" style="width:600px">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                                aria-expanded="true" aria-controls="collapseOne">
+                                Podaj numery zleceń
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+
+                            <div id="zleceniamodul">
+                                <div v-for="(elem,index) in numeryzlecen" class="form-group">
+                                    <input type="text" class="form-control" v-model="numeryzlecen[index].zlecenie"
+                                        style="display:inline">
+                                    <button class="btn btn-danger" @click="removeZlecenie(index)">-</button>
+
+                                </div>
+                                <button @click="pushZlecenie" class="btn btn-primary">Dodaj zlecenie</button>
+                                <br>
+                                <br>
+                                <button @click="getData" class="btn btn-danger">Pobierz dane</button>
+
                             </div>
-                            <button @click="pushZlecenie" class="btn btn-primary">Dodaj zlecenie</button>
-                            <br>
-                            <br>
-                            <button @click="getData" class="btn btn-danger">Pobierz dane</button>
-                
                         </div>
                     </div>
                 </div>
             </div>
+            </div>
+
+            <div class="col-md-6">
+
+                    
+            </div>
+
         </div>
 
 
 
 
-      
 
         <div style="display:flex;" class="mb-2">
             <div style="margin-left:auto">
-                <button @click="showStatusy = !showStatusy" class="btn statusy">Pokaż statusy</button>
-                <button @click="showSczegoly = !showSczegoly" class="btn szczegoly">Pokaż szczegóły</button>
-                <button @click="showWykonanie = !showWykonanie" class="btn jednostki">Pokaż wykonanie</button>
+                <button @click="handleColumns('statusy')" class="btn statusy">Pokaż statusy</button>
+                <button @click="handleColumns('szczegoly')" class="btn szczegoly">Pokaż szczegóły</button>
+                <button @click="handleColumns('wykonanie')" class="btn jednostki">Pokaż wykonanie</button>
 
             </div>
         </div>
 
         <div class="table-fix-head">
-        <table v-if="showDetailed" class="table table-bordered table-dark">
-            <thead>
-                <td class="podstawowe">Nr zlec.</td>
-                <td class="podstawowe" style="text-align:center!important"> Nr poz.</td>
-                <td class="podstawowe"> Nr szt.</td>
-                <td v-if="showSczegoly" class="szczegoly">Barkod</td>
-                <td v-if="showSczegoly" class="szczegoly">System</td>
-                <td v-if="showSczegoly" class="szczegoly">Szerokość</td>
-                <td v-if="showSczegoly" class="szczegoly">Wysokość</td>
-                <td v-if="showSczegoly" class="szczegoly">Łuki</td>
-                <td v-if="showSczegoly" class="szczegoly">Szprosy</td>
-                <td v-if="showSczegoly" class="szczegoly">Rolety</td>
-                <td v-if="showSczegoly" class="szczegoly">Poszerzenia</td>
-                <td v-if="showStatusy" class="statusy" style="width:60px">PIŁ</td>
-                <td v-if="showStatusy" class="statusy" style="width:60px">OKU</td>
-                <td v-if="showStatusy" class="statusy" style="width:60px">SŁU</td>
-                <td v-if="showStatusy" class="statusy" style="width:60px">KON</td>
-                <td v-if="showStatusy" class="statusy" style="width:60px">SZKL</td>
-                <td class="jednostki">JEDNOSTKI</td>
-                <td class="jednostki" v-if="showWykonanie">WYKONANO</td>
-                <td class="jednostki" v-if="showWykonanie">DO ZROBIENIA</td>
+            <table v-if="showDetailed" class="table table-bordered table-dark">
+                <thead>
+                    <td class="podstawowe">Nr zlec.</td>
+                    <td class="podstawowe" style="text-align:center!important"> Nr poz.</td>
+                    <td class="podstawowe"> Nr szt.</td>
+                    <td v-if="show.szczegoly" class="szczegoly">Barkod</td>
+                    <td v-if="show.szczegoly" class="szczegoly">System</td>
+                    <td v-if="show.szczegoly" class="szczegoly">Szerokość</td>
+                    <td v-if="show.szczegoly" class="szczegoly">Wysokość</td>
+                    <td v-if="show.szczegoly" class="szczegoly">Łuki</td>
+                    <td v-if="show.szczegoly" class="szczegoly">Szprosy</td>
+                    <td v-if="show.szczegoly" class="szczegoly">Rolety</td>
+                    <td v-if="show.szczegoly" class="szczegoly">Poszerzenia</td>
+                    <td v-if="show.statusy" class="statusy" style="width:60px">PIŁ</td>
+                    <td v-if="show.statusy" class="statusy" style="width:60px">OKU</td>
+                    <td v-if="show.statusy" class="statusy" style="width:60px">SŁU</td>
+                    <td v-if="show.statusy" class="statusy" style="width:60px">KON</td>
+                    <td v-if="show.statusy" class="statusy" style="width:60px">SZKL</td>
+                    <!-- <td class="jednostki">JEDNOSTKI</td> -->
+                    <td class="jednostki">JEDNOSTKI</td>
+
+                    <td class="jednostki" v-if="show.wykonanie">WYKONANO</td>
+                    <td class="jednostki" v-if="show.wykonanie">DO ZROBIENIA</td>
 
 
-            </thead>
-            <tbody>
-                <tr v-for="elem in travdorm">
-                    <td class="podstawowe" @click="filter(elem.commande)">{{elem.commande}}</td>
-                    <td class="podstawowe">{{elem.id}}</td>
-                    <td class="podstawowe">#{{elem.index + 1}}</td>
-                    <td class="szczegoly" v-if="showSczegoly">{{elem.codebarre}}</td>
-                    <td v-if="showSczegoly" class="szczegoly">{{elem.dormant}}</td>
-                    <td v-if="showSczegoly" class="szczegoly">{{elem.dim1}}</td>
-                    <td v-if="showSczegoly" class="szczegoly">{{elem.dim2}}</td>
-                    <td v-if="showSczegoly" class="szczegoly"></td>
-                    <td v-if="showSczegoly" class="szczegoly"></td>
-                    <td v-if="showSczegoly" class="szczegoly">{{elem.Rolety}}</td>
-                    <td v-if="showSczegoly" class="szczegoly">{{elem.Poszerzenia}}</td>
-                    <td v-if="showStatusy" class="statusy" :class="{green:elem.PILA}">
-                        <p> PIŁA</p>
-                    </td>
-                    <td v-if="showStatusy" class="statusy" :class="{green:elem.OKUWANIE}">
-                        <p>OKU</p>
-                    </td>
-                    <td v-if="showStatusy" class="statusy" :class="{green:elem.MontazSlupkow}">
-                        <p>SŁU</p>
-                    </td>
-                    <td v-if="showStatusy" class="statusy" :class="{green:elem.KONTROLA}">
-                        <p>KON</p>
-                    </td>
-                    <td v-if="showStatusy" class="statusy" :class="{greendark:elem.SZKLENIE}">
-                        <p>SZK</p>
-                    </td>
-                    <td class="jednostki">{{elem.jednostki}}</td>
-                    <td class="jednostki" v-if="showWykonanie">{{elem.wykonano}} </td>
-                    <td class="jednostki" v-if="showWykonanie">{{elem.dozrobienia}} </td>
+                </thead>
+                <tbody>
+                    <tr v-for="elem in travdorm">
+                        <td class="podstawowe" @click="filter(elem.commande)">{{elem.commande}}</td>
+                        <td class="podstawowe">{{elem.id}}</td>
+                        <td class="podstawowe">#{{elem.index + 1}}</td>
+                        <td v-if="show.szczegoly" class="szczegoly">{{elem.codebarre}}</td>
+                        <td v-if="show.szczegoly" class="szczegoly">{{elem.opisSystemu}}</td>
+                        <td v-if="show.szczegoly" class="szczegoly">{{elem.dim1}}</td>
+                        <td v-if="show.szczegoly" class="szczegoly">{{elem.dim2}}</td>
+                        <td v-if="show.szczegoly" class="szczegoly"></td>
+                        <td v-if="show.szczegoly" class="szczegoly">{{elem.szprosy}}</td>
+                        <td v-if="show.szczegoly" class="szczegoly">{{elem.Rolety}}</td>
+                        <td v-if="show.szczegoly" class="szczegoly">{{elem.Poszerzenia}}</td>
+                        <td v-if="show.statusy" class="statusy" :class="{green:elem.PILA}">
+                            <p> PIŁA</p>
+                        </td>
+                        <td v-if="show.statusy" class="statusy" :class="{green:elem.OKUWANIE}">
+                            <p>OKU</p>
+                        </td>
+                        <td v-if="show.statusy" class="statusy" :class="{green:elem.MontazSlupkow}">
+                            <p>SŁU</p>
+                        </td>
+                        <td v-if="show.statusy" class="statusy" :class="{green:elem.KONTROLA}">
+                            <p>KON</p>
+                        </td>
+                        <td v-if="show.statusy" class="statusy" :class="{greendark:elem.SZKLENIE}">
+                            <p>SZK</p>
+                        </td>
+                        <!-- <td class="jednostki">{{elem.jednostki}}</td> -->
+                        <td class="jednostki">{{elem.jednostki2}}</td>
 
-                </tr>
+                        <td class="jednostki" v-if="show.wykonanie">{{elem.wykonano}} </td>
+                        <td class="jednostki" v-if="show.wykonanie">{{elem.dozrobienia}} </td>
+
+                    </tr>
                 <tfoot>
                     <td :colspan="colspan">Suma:</td>
-                    <td>{{sumaall}}</td>
-                    <td v-if="showWykonanie">{{sumaWykonano}}</td>
-                    <td v-if="showWykonanie">{{sumaDozrobienia}}</td>
-
-
+                    <td>{{sumy.jednostki2}}</td>
+                    <td v-if="show.wykonanie">{{sumy.wykonano}}</td>
+                    <td v-if="show.wykonanie">{{sumy.dozrobienia}}</td>
                 </tfoot>
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
 
-        <br>
-        <br>
-
+        <div>
+            Suma szprosów: {{sumy.szprosy}}
+            Suma rolet: {{sumy.rolety}}
+            Suma poszerzeń: {{sumy.Poszerzenia}}
+        </div>
         <!-- <button @click="showSummed = !showSummed" class="mb-2">Pokaż posumowanie po pozycji</button> -->
         <br>
 
@@ -150,7 +169,7 @@
             <tbody>
                 <tr v-for="elem in sumypropsarray">
                     <td>{{elem}}</td>
-                    <td>{{sumy[elem]}}</td>
+                    <td>{{sumyZwiniete[elem]}}</td>
                 </tr>
             </tbody>
         </table>
@@ -180,11 +199,17 @@
                 numeryzlecen: [{ zlecenie: 'ZAM-20-00653' }],
                 profile: [],
                 travdorm: [],
-                sumy: {},
+                messages: [],
+                sumyZwiniete: {},
                 sumypropsarray: [],
-                sumaall: 0,
-                sumaDozrobienia: 0,
-                sumaWykonano: 0,
+                show: {
+                    szczegoly: false,
+                    statusy: false,
+                    wykonanie: false
+                },
+                sumy: {
+
+                },
                 showSczegoly: false,
                 showStatusy: false,
                 showWykonanie: false,
@@ -197,13 +222,13 @@
                     localStorage.zamowienia = JSON.stringify(this.numeryzlecen);
                     let self = this;
                     this.getZleceniaString();
-                    fetch('api/statusy.php?zam=' + self.numeryzlecenstring).then((res) => res.json()).then((res) => self.travdorm = res).then((res) => self.obrobDane());
+                    fetch('api/statusy.php?zam=' + self.numeryzlecenstring).then((res) => res.json()).then(res => { self.travdorm = res; self.obrobDane() }).catch(err => { console.log(err); self.messages.push('Wystąpił błąd') })
 
                 },
                 obrobDane() {
                     this.dodajWynikoweDane();
                     this.getSumyAll();
-                    this.getSumy();
+                    this.getSumyZwiniete();
                 },
 
                 dodajWynikoweDane() {
@@ -211,9 +236,9 @@
 
                         if (this.travdorm[i].SZKLENIE) {
                             this.travdorm[i].dozrobienia = 0
-                            this.travdorm[i].wykonano = this.travdorm[i].jednostki;
+                            this.travdorm[i].wykonano = this.travdorm[i].jednostki2;
                         } else {
-                            this.travdorm[i].dozrobienia = this.travdorm[i].jednostki
+                            this.travdorm[i].dozrobienia = this.travdorm[i].jednostki2
                             this.travdorm[i].wykonano = 0;
 
                         }
@@ -224,35 +249,45 @@
                 filter(value) {
                     this.detlot = this.travdorm.filter((el) => el.commande == value)
                 },
-                getSumy() {
+                getSumyZwiniete() {
                     const result = this.travdorm.reduce(function (res, val) {
                         if (!res[val.commande + '-' + val.id]) {
                             res[val.commande + '-' + val.id] = 0;
                         }
-                        res[val.commande + '-' + val.id] += parseFloat(val.jednostki);
+                        res[val.commande + '-' + val.id] += parseFloat(val.jednostki2);
                         return res;
                     }, {})
 
-                    this.sumy = result;
+                    this.sumyZwiniete = result;
                     this.sumypropsarray = Object.keys(result);
                 },
                 getSumyAll() {
-                    this.sumaall = this.travdorm.reduce(function (res, val) {
-                        res += parseFloat(val['jednostki']);
-                        return res
-                    }, 0)
+                    let sumyboard = ['jednostki2', 'dozrobienia', 'wykonano', 'Poszerzenia']
 
-                    this.sumaDozrobienia = this.travdorm.reduce(function (res, val) {
-                        res += parseFloat(val['dozrobienia']);
-                        return res
-                    }, 0)
+                    for (let i = 0; i < sumyboard.length; i++) {
+                        this.sumy[sumyboard[i]] = this.travdorm.reduce(function (res, val) {
+                            res += parseFloat(val[sumyboard[i]]);
+                            return res
+                        }, 0)
 
-                    this.sumaWykonano = this.travdorm.reduce(function (res, val) {
-                        res += parseFloat(val['wykonano']);
-                        return res
-                    }, 0)
+                        this.sumy.rolety = this.travdorm.reduce(function (res, val) {
+                            if (val.Rolety.length > 0) {
 
+                                res += 1
+                            }
+                            console.log(res)
+                            return res
+                        }, 0)
 
+                        this.sumy.szprosy = this.travdorm.reduce(function (res, val) {
+                            if (val.szprosy.length > 0) {
+
+                                res += 1
+                            }
+                            console.log(res)
+                            return res
+                        }, 0)
+                    }
                 },
                 zmienWykonano() {
                     this.travdorm[0].wykonano = 50;
@@ -275,12 +310,21 @@
 
                     this.numeryzlecenstring = result.slice(0, -1);
 
+                },
+                handleColumns(sekcja) {
+                    this.show[sekcja] = !this.show[sekcja]
+
+                    localStorage.show = JSON.stringify(this.show);
                 }
 
             },
-            created(){
-                if (localStorage.zamowienia){
+            created() {
+                if (localStorage.zamowienia) {
                     this.numeryzlecen = JSON.parse(localStorage.zamowienia);
+                }
+
+                if (localStorage.show) {
+                    this.show = JSON.parse(localStorage.show);
                 }
             },
             mounted() {
@@ -294,12 +338,12 @@
                 colspan() {
                     let number = 3;
 
-                    if (this.showStatusy) {
+                    if (this.show.statusy) {
                         number += 5;
                     }
 
 
-                    if (this.showSczegoly) {
+                    if (this.show.szczegoly) {
                         number += 8;
                     }
 

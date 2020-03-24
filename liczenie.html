@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+    <table>
+        <thead>
+            <td>typ</td>
+            <td>iloscskrzydelwoknie</td>
+            <td>jednostki</td>
+        </thead>
+        <tbody>
+            <tr v-for="el in pozycje">
+                <td>{{el.typ}}</td>
+                <td>{{el.iloscskrzydelwoknie}}</td>
+                <td>{{el.jednostki}}</td>
+
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
+    <script>
+        let app = new Vue({
+            el:"#app",
+            data:{
+                pozycje:[ 
+                    {typ:'FIX',iloscskrzydelwoknie:2},
+                    {typ:'SKRZYDLO',iloscskrzydelwoknie:2},
+                    {typ:'SKRZYDLO',iloscskrzydelwoknie:1},
+                    {typ:'SKRZYDLO2S',iloscskrzydelwoknie:1}                
+                ]
+            },
+            methods:{
+                calculate(){
+                    for(let i=0;i<this.pozycje.length;i++){
+                        let wynik = 0;
+
+                        if(this.pozycje[i].typ == 'FIX'){
+                            wynik = 0.5
+                        }else if(this.pozycje[i].typ == 'SKRZYDLO2S'){
+                            wynik = 1.5
+                        }else if(this.pozycje[i].iloscskrzydelwoknie > 1){
+                            wynik = 0.75
+                        }else {
+                            wynik = 1
+                        }
+                        this.pozycje[i].jednostki = wynik;
+                    }
+                }
+            },
+            created(){
+                this.calculate()
+            },
+            mounted(){
+            }
+
+        })
+    </script>
+
+</body>
+</html>

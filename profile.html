@@ -19,6 +19,8 @@
             {{message}}
         </p>
 
+        <p v-if="loading" class="loading">Ładowanie...</p>
+
 
         <table class="table table-bordered table-dark">
             <thead>
@@ -52,19 +54,15 @@
                 dane: [],
                 numeryzlecen: [{ zlecenie: 'ZAM-20-00653' }],
                 numeryzlecenstring: '',
-                messages: []
+                messages: [],
+                loading:false
             },
             methods: {
                 getData() {
                     let self = this;
                     this.getZleceniaString();
-                    fetch('/api/profile.php?zam=' + self.numeryzlecenstring)
-                        .then(response => {
-                            console.log('fasdfads');
-                            if (!response.ok) throw Error(response.statusText);
-                            return response.json();
-                        })
-                        .then(res => {console.log('sdfadsf'). self.dane = res  }).catch((error) => self.messages.push('Wystąpił błąd - być może niepoprawne dane są podawane do kwerendy SQL'))
+                    this.loading = true;
+                    fetch('/api/profile.php?zam='+ this.numeryzlecenstring).then(res =>res.json()).then((res) => { self.dane = res;self.loading = false }).catch(err => { console.log(err);self.loading=false; self.messages.push('Wystąpił błąd') })
                 },
                 getZleceniaString() {
                     let result = '';
