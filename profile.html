@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,67 +10,76 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <div id="app">
+    <div id="app" class="container">
+
+        <p v-for="message in messages" class="error">
+            {{message}}
+        </p>
+
 
         <table class="table table-bordered table-dark">
             <thead>
-                <td>Zlecenie</td>
-                <td>Pozycja</td>
-                <td>Profil</td>
-                <td>Opis profilu</td>
-                <td>Długość</td>
+                <td class="podstawowe">Zlecenie</td>
+                <td class="podstawowe">Pozycja</td>
+                <td class="szczegoly">Profil</td>
+                <td class="szczegoly">Opis profilu</td>
+                <td class="szczegoly"> Długość</td>
             </thead>
             <tbody>
                 <tr v-for="elem in dane">
-                    <td>{{elem.zlecenie}}</td>
-                    <td>{{elem.pozycja}}</td>
-                    <td>{{elem.profil}}</td>
-                    <td>{{elem.opis}}</td>
-                    <td>{{elem.dlugosc}}</td>
+                    <td class="podstawowe">{{elem.zlecenie}}</td>
+                    <td class="podstawowe">{{elem.pozycja}}</td>
+                    <td class="szczegoly">{{elem.profil}}</td>
+                    <td class="szczegoly">{{elem.opis}}</td>
+                    <td class="szczegoly">{{elem.dlugosc}}</td>
                 </tr>
             </tbody>
         </table>
 
 
     </div>
-    
+
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.js"></script>
     <script>
-        let app =new Vue({
-            el:"#app",
-            data:{
-                dane:[],
+        let app = new Vue({
+            el: "#app",
+            data: {
+                dane: [],
                 numeryzlecen: [{ zlecenie: 'ZAM-20-00653' }],
-                numeryzlecenstring: ''
+                numeryzlecenstring: '',
+                messages: []
             },
-            methods:{
-                getData(){
+            methods: {
+                getData() {
                     let self = this;
                     this.getZleceniaString();
-                    fetch('/api/profile.php?zam='+self.numeryzlecenstring).then((res)=>res.json()).then((res)=>self.dane = res)
+                    fetch('/api/profile.php?zam=' + self.numeryzlecenstring)
+                        .then(response => {
+                            console.log('fasdfads');
+                            if (!response.ok) throw Error(response.statusText);
+                            return response.json();
+                        })
+                        .then(res => {console.log('sdfadsf'). self.dane = res  }).catch((error) => self.messages.push('Wystąpił błąd - być może niepoprawne dane są podawane do kwerendy SQL'))
                 },
                 getZleceniaString() {
                     let result = '';
                     for (let i = 0; i < this.numeryzlecen.length; i++) {
-                        console.log(this.numeryzlecen[0]);
-
                         result += '\'' + this.numeryzlecen[i].zlecenie + '\'' + ',';
                     }
-
                     this.numeryzlecenstring = result.slice(0, -1);
-
                 }
             },
-            created(){
-                if (localStorage.zamowienia){
+            created() {
+                if (localStorage.zamowienia) {
                     this.numeryzlecen = JSON.parse(localStorage.zamowienia);
                 }
             },
-            mounted(){
+            mounted() {
                 this.getData();
             }
 
@@ -77,4 +87,5 @@
     </script>
 
 </body>
+
 </html>

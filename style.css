@@ -1,3 +1,9 @@
+ p.error {
+  color:red;
+  font-weight:bold;
+ }
+ 
+ 
  /* doroty kod */
  .table-fix-head{
      display:inline-block;
@@ -6,7 +12,6 @@
 }
 .table-fix-head table{
     border-collapse: collapse;
-    /* width: 80%; */
 }
 .table-fix-head td{
     padding: 4px 4px;
@@ -14,23 +19,22 @@
 .table-fix-head thead td{
     position: sticky;
     top: -1px;
-    /* border-bottom:2px black solid; */
 }
 
 .table-fix-head tfoot td{
     position: sticky;
     bottom: 0px;
     z-index:10;
-    /* background-color: #343 */
     background-color:#333;
 
-    /* border-bottom:2px black solid; */
 }
 
 table tr td:first-child{
     width:10em;
 }
 
+
+/* */
 
 
 .collapsing{position:relative;height:0;overflow:hidden;transition:height 0.35s ease}
